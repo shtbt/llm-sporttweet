@@ -24,6 +24,8 @@
 ---
 ##  ⏪Prerequisites
 Before running this project, make sure you have [Ollama](https://github.com/ollama/ollama/tree/main/docs) installed. You can find detailed instruction for installing ollama in [this medium post](https://medium.com/@hassan.tbt1989/build-a-rag-powered-llm-service-with-ollama-open-webui-a-step-by-step-guide-a688ec58ac97), but in short, to run Ollama in a containerized environment, we will set it up using Docker. See installation instruction here.
+
+**In each step, use ```sudo``` if needed**
 ### 1. Install Docker
 Before proceeding, make sure you have Docker installed. If not, install it using the following commands:
 - **For Debian/Ubuntu:**  
@@ -61,7 +63,7 @@ You should see the ollama container running.
 ### 5. Pulling a model in ollama
 Now that you have everything set, you need to pull a model for ollama. choose your model from [ollama models repository](https://ollama.com/search). Pay attention to the capacity of your machine and choose the suitable version of the model. Pay attention to the capacity of your machine and choose the suitable version of the model. I have choosen ```gemma3:4b-it-q8_``` . For downloading the model:
 ```bash
-docker exec -it ollama ollama run gemma3:4b-it-q8_
+ollama pull gemma3:4b-it-q8_0
 ```
 
 

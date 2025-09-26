@@ -51,13 +51,18 @@ docker run -d --name ollama \
   ollama/ollama:latest
 ```
 
-### 4: Verify the Installation
+### 4. Verify the Installation
 To check if Ollama is running, use:
 ```bash
 docker ps
 ```
 You should see the ollama container running.
 
+### 5. Pulling a model in ollama
+Now that you have everything set, you need to pull a model for ollama. choose your model from [ollama models repository](https://ollama.com/search). Pay attention to the capacity of your machine and choose the suitable version of the model. Pay attention to the capacity of your machine and choose the suitable version of the model. I have choosen ```gemma3:4b-it-q8_``` . For downloading the model:
+```bash
+docker exec -it ollama ollama run gemma3:4b-it-q8_
+```
 
 
 ##  🚀Quick Start

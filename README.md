@@ -26,7 +26,7 @@
 Before running this project, make sure you have [Ollama](https://github.com/ollama/ollama/tree/main/docs) installed. You can find detailed instruction for installing ollama in [this medium post](https://medium.com/@hassan.tbt1989/build-a-rag-powered-llm-service-with-ollama-open-webui-a-step-by-step-guide-a688ec58ac97), but in short, to run Ollama in a containerized environment, we will set it up using Docker. See installation instruction here.
 
 **In each step, use ```sudo``` if needed**
-### 1. Install Docker
+#### 1. Install Docker
 Before proceeding, make sure you have Docker installed. If not, install it using the following commands:
 - **For Debian/Ubuntu:**  
   ```bash
@@ -38,12 +38,12 @@ Before proceeding, make sure you have Docker installed. If not, install it using
   ```
 - **For Windows:**
   Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) from Docker’s official website. Or you can use WSL to emulate Linux.
-### 2. Pull the Ollama Docker Image
+#### 2. Pull the Ollama Docker Image
 Once Docker is installed, pull the latest Ollama image(Use sudo if needed):
   ```bash
   docker pull ollama/ollama:latest
   ```
-### 3. Run Ollama Container
+#### 3. Run Ollama Container
 Now, start the Ollama container with the necessary configurations:
 ```bash
 docker run -d --name ollama \
@@ -53,14 +53,14 @@ docker run -d --name ollama \
   ollama/ollama:latest
 ```
 
-### 4. Verify the Installation
+#### 4. Verify the Installation
 To check if Ollama is running, use:
 ```bash
 docker ps
 ```
 You should see the ollama container running.
 
-### 5. Pulling a model in ollama
+#### 5. Pulling a model in ollama
 Now that you have everything set, you need to pull a model for ollama. choose your model from [ollama models repository](https://ollama.com/search). Pay attention to the capacity of your machine and choose the suitable version of the model. Pay attention to the capacity of your machine and choose the suitable version of the model. I have choosen ```gemma3:4b-it-q8_``` . For downloading the model:
 ```bash
 ollama pull gemma3:4b-it-q8_0

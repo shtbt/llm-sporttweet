@@ -28,7 +28,7 @@ Before running this project, make sure you have [Ollama](https://github.com/olla
 **In each step, use ```sudo``` if needed**
 ### 1. Install Docker
 Before proceeding, make sure you have Docker installed. If not, install it using the following commands:
-- **For Debian/Ubuntu:**  
+- **For Linux (Debian/Ubuntu):**  
   ```bash
   sudo apt update && sudo apt install -y docker.io
   ```

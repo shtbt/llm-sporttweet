@@ -1,0 +1,9 @@
+requests
+feedparser
+beautifulsoup4
+telethon
+langchain-community
+langchain-core
+langchain
+tweepy
+configparser

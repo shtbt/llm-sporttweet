@@ -15,12 +15,50 @@
 ---
 
 ## Table of Contents
+0. [Prerequisites](#prerequisites)
 1. [Quick Start](#quick-start)  
 2. [Features](#features)  
 3. [Project Structure](#project-structure)  
 4. [Full Article](#full-article)
 
 ---
+##  ⏪Prerequisites
+Before running this project, make sure you have [Ollama](https://github.com/ollama/ollama/tree/main/docs) installed. You can find detailed instruction for installing ollama in [this medium post](https://medium.com/@hassan.tbt1989/build-a-rag-powered-llm-service-with-ollama-open-webui-a-step-by-step-guide-a688ec58ac97), but in short, to run Ollama in a containerized environment, we will set it up using Docker. See installation instruction here.
+### 1. Install Docker
+Before proceeding, make sure you have Docker installed. If not, install it using the following commands:
+- **For Debian/Ubuntu:**  
+  ```bash
+  sudo apt update && sudo apt install -y docker.io
+  ```
+- **For macOS (via Homebrew):**
+  ```bash
+  brew install docker
+  ```
+- **For Windows:**
+  Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) from Docker’s official website. Or you can use WSL to emulate Linux.
+### 2. Pull the Ollama Docker Image
+Once Docker is installed, pull the latest Ollama image(Use sudo if needed):
+  ```bash
+  docker pull ollama/ollama:latest
+  ```
+### 3. Run Ollama Container
+Now, start the Ollama container with the necessary configurations:
+```bash
+docker run -d --name ollama \
+  --gpus=all \
+  -p 11434:11434 \
+  -v ollama_data:/root/.ollama \
+  ollama/ollama:latest
+```
+
+### 4: Verify the Installation
+To check if Ollama is running, use:
+```bash
+docker ps
+```
+You should see the ollama container running.
+
+
 
 ##  🚀Quick Start
 

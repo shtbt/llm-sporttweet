@@ -108,7 +108,6 @@ python3 main.py
 * Scrapes and stores articles in SQLite
 * Uses LLM (Ollama + LangChain) to evaluate worthiness
 * Generates Twitter-ready captions (urgent + non-urgent)
-* Supports image downloads for posts
 * Avoids reposting and duplicates
 
 

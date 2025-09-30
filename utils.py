@@ -16,50 +16,6 @@ import tweepy
 import asyncio
 
 # ------------------------
-#   Config
-# ------------------------
-config = configparser.ConfigParser()
-config.read_file(open(r'config.ini'))
-
-# ------------------------
-#   Twitter API Credentials
-# ------------------------
-twitter_api=None
-TW_CONSUMER_KEY = config.get('TWITTER_API', 'TW_CONSUMER_KEY')
-TW_CONSUMER_SECRET = config.get('TWITTER_API', 'TW_CONSUMER_SECRET')
-TW_ACCESS_TOKEN = config.get('TWITTER_API', 'TW_ACCESS_TOKEN')
-TW_ACCESS_SECRET = config.get('TWITTER_API', 'TW_ACCESS_SECRET')
-
-#if all of the keys are not None
-if TW_CONSUMER_KEY and TW_CONSUMER_SECRET and TW_ACCESS_TOKEN and TW_ACCESS_SECRET:
-    auth = tweepy.OAuth1UserHandler(
-        TW_CONSUMER_KEY, TW_CONSUMER_SECRET, TW_ACCESS_TOKEN, TW_ACCESS_SECRET
-    )
-    try:
-        twitter_api = tweepy.API(auth)
-    except Exception as ex:
-        print('Error Connecting to Twitter')
-
-
-# ------------------------
-#   Telegram API Credentials
-# ------------------------
-API_ID = int(config.get('TELEGRAM_API', 'API_ID'))
-API_HASH = config.get('TELEGRAM_API', 'API_HASH')
-SESSION_NAME = config.get('TELEGRAM_API', 'SESSION_NAME')
-TELEGRAM_ADMIN = config.get('TELEGRAM_API', 'TELEGRAM_ADMIN')   # "me" means your own account
-
-async def get_telegram_client():
-    global telegram_client
-    if telegram_client is None:
-        telegram_client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
-        await telegram_client.start()
-    return telegram_client
-
-telegram_client = None
-
-
-# ------------------------
 #   General Parameters
 # ------------------------
 
@@ -75,6 +31,55 @@ INSTANT_THRESHOLD = {"freshness": 8, "impact": 7, "uniqueness":1,"proximity": 0.
 ### Set to Both if you want only save in DB
 ### Set to None if you want only save in DB
 POST_MODE = 'telegram'
+
+# ------------------------
+#   Config
+# ------------------------
+config = configparser.ConfigParser()
+config.read_file(open(r'config.ini'))
+
+# ------------------------
+#   Twitter API Credentials
+# ------------------------
+try:
+    twitter_api=None
+    TW_CONSUMER_KEY = config.get('TWITTER_API', 'TW_CONSUMER_KEY')
+    TW_CONSUMER_SECRET = config.get('TWITTER_API', 'TW_CONSUMER_SECRET')
+    TW_ACCESS_TOKEN = config.get('TWITTER_API', 'TW_ACCESS_TOKEN')
+    TW_ACCESS_SECRET = config.get('TWITTER_API', 'TW_ACCESS_SECRET')
+
+    #if all of the keys are not None
+    if TW_CONSUMER_KEY and TW_CONSUMER_SECRET and TW_ACCESS_TOKEN and TW_ACCESS_SECRET:
+        auth = tweepy.OAuth1UserHandler(
+            TW_CONSUMER_KEY, TW_CONSUMER_SECRET, TW_ACCESS_TOKEN, TW_ACCESS_SECRET
+        )
+        try:
+            twitter_api = tweepy.API(auth)
+        except Exception as ex:
+            print('Error Connecting to Twitter')
+except Exception as ex:
+    print(f'Error setting credentials for Twitter(X): {ex}')
+
+
+# ------------------------
+#   Telegram API Credentials
+# ------------------------
+try:
+    telegram_client = None
+    API_ID = int(config.get('TELEGRAM_API', 'API_ID'))
+    API_HASH = config.get('TELEGRAM_API', 'API_HASH')
+    SESSION_NAME = config.get('TELEGRAM_API', 'SESSION_NAME')
+    TELEGRAM_ADMIN = config.get('TELEGRAM_API', 'TELEGRAM_ADMIN')   # "me" means your own account
+
+    async def get_telegram_client():
+        global telegram_client
+        if telegram_client is None:
+            telegram_client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
+            await telegram_client.start()
+        return telegram_client
+except Exception as ex:
+    print(f'Error setting credentials for Telegram: {ex}')
+
 
 
 # ------------------------

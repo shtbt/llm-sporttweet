@@ -97,7 +97,7 @@ TELEGRAM_ADMIN=YOUR_CHAT_ID
 ```
 ### 3. Run the Pipeline
 ```bash
-python main.py
+python3 main.py
 ```
 * The bot runs continuously, checking RSS feeds every 5 minutes.
 * It scores articles via Ollama + LangChain and decides which tweets to send—either posting directly or drafting to Telegram.

@@ -81,7 +81,7 @@ Copy the sample configuration file and add your API keys:
 ```bash
 cp config.sample.ini config.ini
 ```
-Then open config.ini and update the following sections with your credentials:
+For **Twitter (X)**, create a developer account at [developer.x.com](https://developer.x.com/), apply for a project/app, and generate your **API Key**, **API Secret Key**, **Access Token**, and **Access Token Secret**. For **Telegram**, go to [my.telegram.org](https://my.telegram.org/), log in with your account, and under API Development Tools, create a new application to get your **API ID** and **API Hash**. You’ll also need to set a **SESSION_NAME** (any identifier for your session) and define **TELEGRAM_ADMIN** as the Telegram ID of the account that should receive the tweets. If you set it to **`me`**, the messages will be sent to your **Saved Messages**. Both sets of credentials _**should be stored securely**_.
 ```ini
 [TWITTER_API]
 TW_CONSUMER_KEY=YOUR_API_KEY

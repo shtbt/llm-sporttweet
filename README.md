@@ -165,16 +165,14 @@ While I focus on **football(soccer) news** here, this workflow can easily be ada
 
 ![Pipeline of the Project](/img/pipeline.png)**Pipeline of the Project**
 
-## **⚡ Scoring & Tweet Generation with LLMs**
+## **⚡ Scoring & Tweet Generation with LLMs**
 
 A central part of the system is the way I use **LLM prompts** for two tasks: scoring news items and generating platform-ready text. Instead of relying on a rigid rule-based engine, I ask the model to evaluate each article across six dimensions:
 
 * **Proximity**: How closely the news is related to football (soccer).  
 * **Freshness**: Whether the story is recent or breaking compared to the current date and time.  
 * **Impact**: Its importance for fans — big clubs, star players, or title races.  
-* **Engagement**: Likelihood of sparking reactions, shares, or discussions.  
 * **Uniqueness**: How distinct it is compared to that day’s post history.  
-* **Virality**: Its potential to trend or go viral on social platforms.
 
 To make these evaluations reliable, the prompts enforce **structured output**. This was critical: without it, the model might generate free-form text that is hard to parse programmatically. With structured JSON responses, I can extract consistent values that flow directly into the automation pipeline, reducing errors and ensuring decisions are reproducible. Here’s the schema I embedded directly in the scoring prompt:
 
@@ -183,10 +181,7 @@ To make these evaluations reliable, the prompts enforce **structured output**. T
  "proximity": "number between 0-10",  
  "freshness": "number between 0-10",  
  "impact": "number between 0-10",  
- "engagement": "number between 0-10",  
- "uniqueness": "number between 0-10",  
- "virality": "number between 0-10",  
- "final_decision": "POST or SKIP"  
+ "uniqueness": "number between 0-10"
 }
 ```
 
@@ -212,14 +207,14 @@ Respond ONLY with the tweet text.
 finally, we set a criteria based on this scores for accepting a news as urgent and post it immediately.
 
 ```python
-INSTANT_THRESHOLD = {"freshness": 8, "impact": 7, "virality": 7, "proximity": 9}
+INSTANT_THRESHOLD = {"freshness": 8, "impact": 7, "uniqueness":1,"proximity": 0.8}
 ...
 def should_post_instant(scores):
     return (
         scores["freshness"] >= INSTANT_THRESHOLD["freshness"] and
         scores["impact"] >= INSTANT_THRESHOLD["impact"] and
-        scores["virality"] >= INSTANT_THRESHOLD["virality"] and
-        scores["proximity"] >= INSTANT_THRESHOLD["proximity"]
+        scores["uniqueness"] >= INSTANT_THRESHOLD["uniqueness"] and
+        scores["proximity"] >= INSTANT_THRESHOLD["proximity"] 
     )
 ```
 
@@ -233,18 +228,33 @@ def decide_non_urgent_posts():
     if remaining_capacity <= 0:
         return []
 
+    # Step 1: Keep only true soccer posts (proximity == 10, fresh, unique)
     filtered = [
         p for p in candidate_posts
-        if p.get("proximity", 0) == 10
-        and p.get("freshness", 0) >= 5
-        and p.get("uniqueness", 0) >= 7
+        if p.get("proximity", 0) >= 0.8
+        and p.get("freshness", 0) >= 6
+        and p.get("uniqueness", 0) == 1
     ]
     if not filtered:
         return []
 
-    ids = [p["id"] for p in filtered]
-    k = min(2, remaining_capacity, len(ids))
-    return random.sample(ids, k=k)
+    # Step 2: Split into high-impact (≥7) vs. low-impact (<7, e.g., MLS)
+    high_impact = [p for p in filtered if p.get("impact", 0) >= 7]
+    low_impact = [p for p in filtered if p.get("impact", 0) < 7]
+
+    # Step 3: Select posts, prioritizing high-impact first
+    selected = []
+    if high_impact:
+        k = min(len(high_impact), remaining_capacity)
+        selected.extend(random.sample(high_impact, k=k))
+        remaining_capacity -= k
+
+    # Step 4: If quota still available, allow low-impact posts (MLS, etc.)
+    if remaining_capacity > 0 and low_impact:
+        k = min(len(low_impact), remaining_capacity)
+        selected.extend(random.sample(low_impact, k=k))
+
+    return [p["id"] for p in selected]
 ```
 
 ## **🛠️ The Tech Stack**
@@ -289,15 +299,13 @@ After running the pipeline for a few days, the bot was able to process multiple 
 * *“Leicester City academy players shine in youth tournament, promising future stars for English football.”*
 
 **Scoring Examples:**  
- For each article, the LLM assigns structured scores such as:
+For each article, the LLM assigns structured scores such as:
 ```
-{  
- "proximity": 10,  
- "freshness": 8,  
- "impact": 9,  
- "engagement": 7,  
- "uniqueness": 9,  
- "virality": 8  
+{
+  "proximity": 0.9,
+  "freshness": 8,
+  "impact": 9,
+  "uniqueness": 9
 }
 ```
 
@@ -309,18 +317,26 @@ All the code for this project is available on GitHub. You can explore it, try it
 
 ## **🔮 What’s Next**
 
-While this pipeline already handles football news and Twitter posts autonomously, there’s plenty of room for expansion and improvement.
-
-* **Prompt Optimization:** Anyone can refine the LLM prompts to improve scoring accuracy, make tweet generation more engaging, or adjust the style and tone to fit different audiences. Prompt engineering remains the easiest way to boost performance without changing the core code.  
-* **Instagram Integration:** The same system could be extended to generate Instagram captions, select suitable images automatically, and post directly. Combining image retrieval with caption generation would make the bot a full multi-platform content creator.  
-* **Other Content Types:** Beyond breaking news, LLMs can be used to decide and generate other types of posts, such as “on-this-day” historical posts, weekly roundups, or highlights from long-form articles. The structured scoring approach can be adapted for any type of content.
-
+This pipeline already filters football news and generates Twitter posts automatically, but the journey doesn't stop here. There are several exciting directions to make it smarter, faster, and more versatile:
+* **Embedding-Based Uniqueness Checks:** Instead of relying solely on LLM calls to measure uniqueness, I plan to integrate an **embedding model** to detect similarity between articles. This reduces redundant LLM calls, cuts down expenses, and makes the system more scalable.
+* **Smarter Prompt Engineering:** Prompts are the "control knobs" of an LLM system. By refining them, I can improve scoring accuracy, make generated captions more engaging, and fine-tune the tone for different audiences. Better prompts = better posts without touching the underlying code.
+* **Instagram + Images :** Beyond Twitter, the system can soon support **Instagram posting**, complete with auto-generated captions and **relevant images** scraped and selected alongside the news. With both text and visuals, the pipeline becomes a true multi-platform content creator.
+* **Richer Content Types:** This approach isn't limited to breaking news. The same scoring-and-generation workflow can be extended to** weekly roundups, "on-this-day" historical throwbacks**, or even **summaries of long-form articles**. With structured scoring and filtering, the bot can adapt to any content style.
 These possibilities show how flexible LLM-powered pipelines can be. By adjusting prompts and scoring logic, the system can handle multiple platforms, content formats, and even entirely new domains.
 
 ## **🏁 Conclusion**
 
-This project proves that LLMs can be much more than chatbots. With the right prompts, scoring logic, and automation pipeline, they can **act as autonomous newsrooms** — reading, evaluating, and writing content on their own.
+This project shows that **LLMs are not just chatbots** - they can serve as **autonomous editors, curators, and creators**. With the right combination of **prompts, scoring logic, embeddings, and automation**, an LLM-powered pipeline can read raw news, evaluate its importance, and transform it into engaging social media content with minimal human effort.
+By integrating **RSS feeds, structured scoring, and post generation**, I built a system that continuously turns streams of soccer news into ready-to-publish Twitter and Instagram content. What once required hours of editorial work can now run on its own - making both judgment calls and creative choices automatically. But this is only the beginning. The same framework can be extended to:
 
-By combining RSS feeds, structured scoring, and tweet generation, I built a system that continuously turns raw sports news into social-ready posts. What once required human editors can now run automatically, with the LLM making both the judgment calls and the creative writing.
+* **Instagram with captions + images**
+* **Blogs and newsletters**
+* **Multi-lingual newsrooms**
+* **Other domains like finance, technology, or science**
 
-And this is only the beginning. The same approach can be extended to Instagram, blogs, or even multi-lingual news coverage — showing how powerful and flexible LLM-powered automation can be.
+## **📬 Let's Connect**
+⚡ In short, this project is a blueprint for LLM-powered content automation - a glimpse of how future newsrooms, brands, and creators can scale their voices without scaling their teams.
+If you're interested in collaborating, sharing feedback, or exploring similar projects, feel free to reach out:
+* **Email**: [hassan.tbt1989@gmail.com](mailto:hassan.tbt1989@gmail.com)
+* **GitHub Repo of the Project**: [https://github.com/shtbt/llm-newsroom](https://github.com/shtbt/llm-newsroom)
+* **LinkedIn**: [https://www.linkedin.com/in/s-hassan-tabatabaei-19b5298a](https://www.linkedin.com/in/s-hassan-tabatabaei-19b5298a/)

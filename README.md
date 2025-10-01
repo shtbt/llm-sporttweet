@@ -81,7 +81,7 @@ Copy the sample configuration file and add your API keys:
 ```bash
 cp config.sample.ini config.ini
 ```
-For **Twitter (X)**, create a developer account at [developer.x.com](https://developer.x.com/), apply for a project/app, and generate your **API Key**, **API Secret Key**, **Access Token**, and **Access Token Secret**. For **Telegram**, go to [my.telegram.org](https://my.telegram.org/), log in with your account, and under API Development Tools, create a new application to get your **API ID** and **API Hash**. You’ll also need to set a **SESSION_NAME** (any identifier for your session) and define **TELEGRAM_ADMIN** as the Telegram ID of the account that should receive the tweets. If you set it to **`me`**, the messages will be sent to your **Saved Messages**. Both sets of credentials _**should be stored securely**_.
+For **Twitter (X)**, create a developer account at [developer.x.com](https://developer.x.com/), apply for a project/app, and generate your **API Key**, **API Secret Key**, **Access Token**, and **Access Token Secret**. For **Telegram**, go to [my.telegram.org](https://my.telegram.org/), log in with your account, and under API Development Tools, create a new application to get your **API ID** and **API Hash**. You’ll also need to set a **SESSION_NAME** (any identifier for your session) and define **TELEGRAM_ADMIN** as the Telegram ID of the account that should receive the tweets. If you set it to **`me`**, the messages will be sent to your **Saved Messages**. ⚡ On the first run of the Telegram client, you’ll be asked to enter your phone number. Telegram will then send you a one-time code for verification. This happens only during the initial setup. Once your session is created, you won’t be asked again for your phone or token in subsequent runs. Both sets of credentials _**should be stored securely**_.
 ```ini
 [TWITTER_API]
 TW_CONSUMER_KEY=YOUR_API_KEY
@@ -139,28 +139,25 @@ Below is the full article for accessibility:
 
 ## **🚀 Introduction**
 
-Every day, newsrooms, bloggers, and sports fans spend hours scanning feeds, summarizing stories, and rewriting them into social media posts. It’s valuable work, but also repetitive and mechanical.
+Every day, sports journalists, bloggers, and fans sift through endless streams of football news - most of which never makes it to a post. Deciding what's truly worth sharing takes time, attention, and effort.
+That's where Large Language Models (LLMs) change the game. Unlike simple automation scripts or keyword filters, LLMs can actually **read the text, evaluate its importance, and judge whether it's worth publishing**. They go beyond summarizing - they apply reasoning, judgment, and creativity to turn raw news into engaging content.
 
-Large Language Models (LLMs) are changing that. Unlike traditional automation scripts or rule-based systems, LLMs can **read raw text, evaluate its importance, and generate content that feels human**. They don’t just process information — they apply reasoning, judgment, and creativity. That makes them ideal for tasks like turning streams of football news into engaging tweets.
-
-So I set out to build something different: an **autonomous LLM-powered pipeline** that behaves like a miniature newsroom. It reads news feeds, decides what’s worth sharing, scores each article across multiple dimensions (freshness, impact, virality, uniqueness, and more), and finally writes its own tweets — either posting instantly or queuing them for later.
-
-The best part? It runs fully locally using **Ollama for LLM inference, SQLite for structured storage, and a clean Python pipeline with LangChain as the glue**. This isn’t just a demo — it’s a practical showcase of how LLMs can act as reasoning engines, content creators, and decision-makers in an end-to-end automated workflow.
-
-In this article, I’ll walk you through how I built it — from feeds to tweets — and how you can extend it into your own autonomous newsroom.
+With this system, I built a pipeline that **separates soccer news from other stories, filters out the noise, and highlights only the most valuable articles**. Each news item is scored on multiple dimensions - such as proximity, freshness, impact, and uniqueness - so that only the most relevant and engaging pieces are turned into social media posts.
+The pipeline runs fully locally using **Ollama for LLM inference, SQLite for structured storage**, and **LangChain as the orchestration layer**. It acts like a miniature autonomous newsroom: crawling feeds, evaluating newsworthiness, generating captions, and preparing Twitter-ready (or Instagram) posts.
+While I focus on **football(soccer) news** here, this workflow can easily be adapted to other domains - whether it's technology, finance, science, or any project that requires filtering large information streams and posting only the best.
 
 ## **🚀 How the Pipeline Works (Step by Step)**
 
 1. **Start the Main Loop**  
     The app runs continuously, checking for fresh news every 5 minutes and pulls articles from RSS feeds (like ESPN, SkySports, BBC).  
 2. **Scrape Full Article Text**  
-    Each new article’s title, URL, and timestamp are being saved then we download the webpage and extracts readable text with BeautifulSoup and save them. Short or empty articles are skipped to maintain quality.  
+    Each new article's title, URL, and timestamp are being saved then we download the webpage and extracts readable text with BeautifulSoup and save them. Short or empty articles are skipped to maintain quality.  
 3. **Score with LLM**  
-    The article content goes through LLM which uses Ollama \+ LangChain to assign six scores: proximity, freshness, impact, engagement, uniqueness, and virality. These scores are stored back into the sqlite DB for decision-making.  
+    The article content goes through LLM which uses Ollama + LangChain to assign four scores: proximity, freshness, impact, uniqueness. These scores are stored back into the sqlite DB for decision-making.  
 4. **Decide on Instant Posting**  
     If the article is highly fresh, impactful, viral, and football-related, we decide to immediately post that.  
 5. **Generate Instant Tweet Text And Post Accordingly**  
-   If we decide to post the news immediately, we create a short, engaging tweet using the Twitter prompt template and safely appends the article link without exceeding 250 characters. Depending on config, the bot either posts the tweet to X (Formerly Twitter), or sends the draft to Telegram (for human observation) and logs the tweet, caption, reason, and article reference in the Database.  
+   If we decide to post the news immediately, we create a short, engaging tweet using the Twitter prompt template  and safely appends the article link without exceeding 250 characters. Depending on config, the bot either posts the tweet to X (Formerly Twitter), or sends the draft to Telegram (for human observation) and logs the tweet, caption, reason, and article reference in the Database.  
 6. **Select Non-Urgent Candidates**  
    After scoring all of the newly-crawled news and deciding about instant tweets, we pick a few strong but non-urgent news, and generating tweets of them with LLM, respecting the daily quota. We may wont pick any new tweet. Then we publishes selected candidates later in the day, spacing out updates. We ensure the bot never posts more than a **certain amount** times per day.  
 7. **Sleep & Repeat**  

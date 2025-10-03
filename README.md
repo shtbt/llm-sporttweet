@@ -335,6 +335,7 @@ For each article, the LLM assigns structured scores such as:
   "uniqueness": 9
 }
 ```
+Also, you can explore `content_creator.db` which is our sqlite database and has stored tables: articles and posts.
 
 ## **💻 Code & Repository**
 

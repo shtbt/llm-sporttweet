@@ -166,44 +166,33 @@ While I focus on **football(soccer) news** here, this workflow can easily be ada
 ![Pipeline of the Project](/img/pipeline.png)**Pipeline of the Project**
 
 ## **⚡ Scoring & Tweet Generation with LLMs**
-
-A central part of the system is the way I use **LLM prompts** for two tasks: scoring news items and generating platform-ready text. Instead of relying on a rigid rule-based engine, I ask the model to evaluate each article across six dimensions:
+A central part of the system is the way I use **LLM prompts** for two tasks: scoring news items and generating platform-ready text.
+### **Scoring**
+Instead of relying on a rigid rule-based engine, I ask the model to evaluate each article across four dimensions:
 
 * **Proximity**: How closely the news is related to football (soccer).  
 * **Freshness**: Whether the story is recent or breaking compared to the current date and time.  
 * **Impact**: Its importance for fans — big clubs, star players, or title races.  
-* **Uniqueness**: How distinct it is compared to that day’s post history.  
+* **Uniqueness**: How distinct it is compared to that day’s post history.
 
-To make these evaluations reliable, the prompts enforce **structured output**. This was critical: without it, the model might generate free-form text that is hard to parse programmatically. With structured JSON responses, I can extract consistent values that flow directly into the automation pipeline, reducing errors and ensuring decisions are reproducible. Here’s the schema I embedded directly in the scoring prompt:
-
+To make these evaluations reliable, the prompts enforce **structured output**. This was critical: without it, the model might generate free-form text that is hard to parse programmatically. With structured JSON responses, I can extract consistent values that flow directly into the automation pipeline, reducing errors and ensuring decisions are reproducible.
+Another lesson I've learnt is that I shouldn't **overload a single prompt**. Initially I combined all scoring dimensions (soccer relevance, freshness, impact, uniqueness) into one monster instruction. That backfired - especially uniqueness, since I was feeding both current and historical titles, which made the model "**forget**" the main scoring task. So I split the logic into two clear prompts:
+* **Scoring Prompt**, which checks **Proximity**, **Freshness** and **Impact**. 
+* **Uniqueness Prompt**, which compares the **current article title** with a short history of already-posted items
+I feed only first 500 characters of the article to the **SCORING_PROMPT_TEMPLATE** in order to prevent hallucination which may cause from long input to the small-middle size models. Here's the schema I embedded directly in the scoring prompt:
 ```json
 {  
  "proximity": "number between 0-10",  
  "freshness": "number between 0-10",  
- "impact": "number between 0-10",  
- "uniqueness": "number between 0-10"
+ "impact": "number between 0-10"
 }
 ```
 
-When it came to generating the actual posts, I deliberately took a different approach. Unlike the scoring phase, where **structured JSON output** was essential for automation, the generation step only needed the **final text** of the tweet. Here, creativity and readability mattered more than rigid structure. The instructions were carefully crafted to enforce **length limits, tone, and style**, while leaving room for the model’s expressive capacity.
-
-```yaml
-You are an expert football journalist and social media strategist for Twitter (X).
-
-Write a **concise, high-impact tweet** for the sports article below.
-- Max length: **250 characters** (never exceed).
-- Tone: Newsworthy but engaging; spark discussion.
-- If relevant, include **one football-related emoji** (⚽🔥🏆, etc.).
-- Optionally add **1-2 trending hashtags** at the end.
-- Avoid generic phrases like "Breaking:" unless truly urgent.
-- Make the most important detail the first thing readers see.
-
-**TITLE:** {title}  
-**CONTENT:** {content}
-
-Respond ONLY with the tweet text.
+```json
+{  
+ "uniqueness": "number between 0-10"
+}
 ```
-
 finally, we set a criteria based on this scores for accepting a news as urgent and post it immediately.
 
 ```python
@@ -256,6 +245,44 @@ def decide_non_urgent_posts():
 
     return [p["id"] for p in selected]
 ```
+
+### Tweet Generation
+When it came to generating the actual posts, I deliberately took a different approach. Unlike the scoring phase, where **structured JSON output** was essential for automation, the generation step only needed the **final text** of the tweet. Here, creativity and readability mattered more than rigid structure. The instructions were carefully crafted to enforce **length limits, tone, and style**, while leaving room for the model’s expressive capacity.
+
+```yaml
+You are an expert football journalist and social media strategist for Twitter (X).
+
+Write a **concise, high-impact tweet** for the sports article below.
+- Max length: **250 characters** (never exceed).
+- Tone: Newsworthy but engaging; spark discussion.
+- If relevant, include **one football-related emoji** (⚽🔥🏆, etc.).
+- Optionally add **1-2 trending hashtags** at the end.
+- Avoid generic phrases like "Breaking:" unless truly urgent.
+- Make the most important detail the first thing readers see.
+
+**TITLE:** {title}  
+**CONTENT:** {content}
+
+Respond ONLY with the tweet text.
+```
+
+
+To make these evaluations reliable, the prompts enforce **structured output**. This was critical: without it, the model might generate free-form text that is hard to parse programmatically. With structured JSON responses, I can extract consistent values that flow directly into the automation pipeline, reducing errors and ensuring decisions are reproducible. Here’s the schema I embedded directly in the scoring prompt:
+
+```json
+{  
+ "proximity": "number between 0-10",  
+ "freshness": "number between 0-10",  
+ "impact": "number between 0-10",  
+ "uniqueness": "number between 0-10"
+}
+```
+### LLM Model
+Since I'm running this on a personal machine with an **RTX 3060 (8 GB VRAM)**, I had to be mindful of model size and memory requirements. After testing different options, I settled on **gemma3:4b-it-q8_0** - a quantized, instruction-tuned model. It's small enough to fit comfortably on my GPU, while still being powerful enough to handle scoring and text generation tasks. For anyone without a GPU, you can still run **Ollama** on a CPU system - it just runs slower, but it works! That means this project is accessible even if you only have a modest VPS or laptop.
+
+### Feeding the Model: Less Is More
+At first, I naively sent **entire articles** to the LLM for scoring. The results were disappointing: long contexts made the model inconsistent, and responses were noisy.
+ The solution? I trimmed input down to just the **first ~500 characters** of each article. That short snippet usually contains the headline and lead, which is enough for the model to judge relevance, freshness, and impact. The scoring became much more accurate and stable after this change.
 
 ## **🛠️ The Tech Stack**
 

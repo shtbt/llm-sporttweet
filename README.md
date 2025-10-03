@@ -246,7 +246,7 @@ def decide_non_urgent_posts():
     return [p["id"] for p in selected]
 ```
 
-### Tweet Generation
+### **Tweet Generation**
 When it came to generating the actual posts, I deliberately took a different approach. Unlike the scoring phase, where **structured JSON output** was essential for automation, the generation step only needed the **final text** of the tweet. Here, creativity and readability mattered more than rigid structure. The instructions were carefully crafted to enforce **length limits, tone, and style**, while leaving room for the model’s expressive capacity.
 
 ```yaml
@@ -277,10 +277,10 @@ To make these evaluations reliable, the prompts enforce **structured output**. T
  "uniqueness": "number between 0-10"
 }
 ```
-### LLM Model
+### **LLM Model**
 Since I'm running this on a personal machine with an **RTX 3060 (8 GB VRAM)**, I had to be mindful of model size and memory requirements. After testing different options, I settled on **gemma3:4b-it-q8_0** - a quantized, instruction-tuned model. It's small enough to fit comfortably on my GPU, while still being powerful enough to handle scoring and text generation tasks. For anyone without a GPU, you can still run **Ollama** on a CPU system - it just runs slower, but it works! That means this project is accessible even if you only have a modest VPS or laptop.
 
-### Feeding the Model: Less Is More
+### **Feeding the Model: Less Is More**
 At first, I naively sent **entire articles** to the LLM for scoring. The results were disappointing: long contexts made the model inconsistent, and responses were noisy.
  The solution? I trimmed input down to just the **first ~500 characters** of each article. That short snippet usually contains the headline and lead, which is enough for the model to judge relevance, freshness, and impact. The scoring became much more accurate and stable after this change.
 

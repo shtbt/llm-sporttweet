@@ -1,4 +1,4 @@
-# 📌 LLM-Newsroom
+# 📌 LLM-SportTweetAgent
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-green.svg)](https://www.python.org/)
 ![LangChain](https://img.shields.io/badge/Powered%20by-LangChain-green) 

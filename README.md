@@ -147,7 +147,7 @@ Using this approach, I built a pipeline that separates soccer news from other st
 
 The system runs fully locally, leveraging **Ollama** for LLM inference, **SQLite** for structured storage, and **LangChain** for orchestration. It functions like a miniature autonomous newsroom: crawling feeds, evaluating newsworthiness, generating captions, and preparing Twitter-ready posts.
 
-While this project focuses on soccer news, the workflow is easily adaptable to other domains—technology, finance, science, or any area where filtering large information streams and sharing only the best content matters.
+While this project focuses on soccer news, the workflow is easily adaptable to other **domains**—**technology**, **finance**, **science**, or any area where filtering large information streams and sharing only the best content matters.
 
 ## **🚀 How the Pipeline Works (Step by Step)**
 

@@ -139,12 +139,15 @@ Below is the full article for accessibility:
 
 ## **🚀 Introduction**
 
-Every day, sports journalists, bloggers, and fans sift through endless streams of football news - most of which never makes it to a post. Deciding what's truly worth sharing takes time, attention, and effort.
-That's where Large Language Models (LLMs) change the game. Unlike simple automation scripts or keyword filters, LLMs can actually **read the text, evaluate its importance, and judge whether it's worth publishing**. They go beyond summarizing - they apply reasoning, judgment, and creativity to turn raw news into engaging content.
+Every day, sports journalists, bloggers, and fans face an overwhelming stream of football news—most of which never makes it into a post. Deciding what’s truly worth sharing requires time, attention, and effort.
 
-With this system, I built a pipeline that **separates soccer news from other stories, filters out the noise, and highlights only the most valuable articles**. Each news item is scored on multiple dimensions - such as proximity, freshness, impact, and uniqueness - so that only the most relevant and engaging pieces are turned into social media posts.
-The pipeline runs fully locally using **Ollama for LLM inference, SQLite for structured storage**, and **LangChain as the orchestration layer**. It acts like a miniature autonomous newsroom: crawling feeds, evaluating newsworthiness, generating captions, and preparing Twitter-ready (or Instagram) posts.
-While I focus on **football(soccer) news** here, this workflow can easily be adapted to other domains - whether it's technology, finance, science, or any project that requires filtering large information streams and posting only the best.
+This is where Large Language Models (LLMs) change the game. Unlike basic automation scripts or keyword filters, LLMs can read, understand, and evaluate content. They don’t just summarize—they reason, judge, and apply creativity to turn raw news into engaging social media content.
+
+Using this approach, I built a pipeline that separates soccer news from other stories, filters out the noise, and highlights only the most valuable articles. Each news item is scored across multiple dimensions—proximity, freshness, impact, and uniqueness—so only the most relevant and engaging pieces are transformed into social media posts.
+
+The system runs fully locally, leveraging Ollama for LLM inference, SQLite for structured storage, and LangChain for orchestration. It functions like a miniature autonomous newsroom: crawling feeds, evaluating newsworthiness, generating captions, and preparing Twitter- or Instagram-ready posts.
+
+While this project focuses on soccer news, the workflow is easily adaptable to other domains—technology, finance, science, or any area where filtering large information streams and sharing only the best content matters.
 
 ## **🚀 How the Pipeline Works (Step by Step)**
 

@@ -325,16 +325,6 @@ After running the pipeline for a few days, the bot was able to process multiple 
 * *“Inter Milan reveals new kit for the upcoming season — fans react to the bold new design. \#SerieA”*  
 * *“Leicester City academy players shine in youth tournament, promising future stars for English football.”*
 
-**Scoring Examples:**  
-For each article, the LLM assigns structured scores such as:
-```
-{
-  "proximity": 0.9,
-  "freshness": 8,
-  "impact": 9,
-  "uniqueness": 9
-}
-```
 Also, you can explore `content_creator.db` which is our sqlite database and has stored tables: articles and posts.
 
 ## **💻 Code & Repository**

@@ -4,14 +4,14 @@
 ![LangChain](https://img.shields.io/badge/Powered%20by-LangChain-green) 
 ![Ollama](https://img.shields.io/badge/LLM-Ollama-orange) 
 ![SQLite](https://img.shields.io/badge/Database-SQLite-lightgrey?logo=sqlite)
-![Repo Size](https://img.shields.io/github/repo-size/shtbt/llm-newsroom)
-![Last Commit](https://img.shields.io/github/last-commit/shtbt/llm-newsroom)
+![Repo Size](https://img.shields.io/github/repo-size/shtbt/llm-sporttweet)
+![Last Commit](https://img.shields.io/github/last-commit/shtbt/llm-sporttweet)
 
 
 ### An LLM-powered system that reads sports news feeds, scores articles, and writes its own tweets. 🤖
 *Automates content curation, scoring, and social media posting using LLMs.*
 
-![LLM-Newsroom](/img/header.png)
+![LLM-SportTweet](/img/header.png)
 ---
 
 ## Table of Contents
@@ -71,8 +71,8 @@ sudo ollama pull gemma3:4b-it-q8_0
 
 ###  1. Clone the Repository & Install Dependencies
 ```bash
-git clone https://github.com/shtbt/llm-newsroom.git
-cd llm-newsroom
+git clone https://github.com/shtbt/llm-sporttweet.git
+cd llm-sporttweet
 pip install -r requirements.txt
 ```
 
@@ -113,7 +113,7 @@ python3 main.py
 
 ## 📂Project Structure
 ```arduino
-llm-newsroom/
+llm-sporttweet/
 │─── main.py              # entry point
 │─── utils.py             # helper scripts
 │─── db.py                # sqlite schema & migrations
@@ -127,13 +127,13 @@ llm-newsroom/
 ## 📖Full Article
 
 This project was originally explained in detail on Medium:
-👉 ***LLM-Newsroom: How I Built an Autonomous LLM Pipeline That Reads Sports News and Writes Its Own Tweets***
+👉 ***LLM-SportTweet: How I Built an Autonomous LLM Pipeline That Reads Sports News and Writes Its Own Tweets***
 
 Below is the full article for accessibility:
 
-# LLM-Newsroom: How I Built an Autonomous LLM Pipeline That Reads Sports News and Writes Its Own Tweets
+# LLM-SportTweet: How I Built an Autonomous LLM Pipeline That Reads Sports News and Writes Its Own Tweets
 
-![LLM-Newsroom](/img/llm-newsroom-cover.png)**LLM-Newsroom**
+![LLM-SportTweet](/img/llm-newsroom-cover.png)**LLM-SportTweet**
 
 
 
@@ -331,7 +331,7 @@ Also, you can explore `content_creator.db` which is our sqlite database and has 
 
 All the code for this project is available on GitHub. You can explore it, try it yourself, or adapt it for your own use cases:
 
-**GitHub:** [https://github.com/shtbt/llm-newsroom](https://github.com/shtbt/llm-newsroom)
+**GitHub:** [https://github.com/shtbt/llm-sporttweet](https://github.com/shtbt/llm-sporttweet)
 
 ## **🔮 What’s Next**
 
@@ -356,5 +356,5 @@ By integrating **RSS feeds, structured scoring, and post generation**, I built a
 ⚡ In short, this project is a blueprint for LLM-powered content automation - a glimpse of how future newsrooms, brands, and creators can scale their voices without scaling their teams.
 If you're interested in collaborating, sharing feedback, or exploring similar projects, feel free to reach out:
 * **Email**: [hassan.tbt1989@gmail.com](mailto:hassan.tbt1989@gmail.com)
-* **GitHub Repo of the Project**: [https://github.com/shtbt/llm-newsroom](https://github.com/shtbt/llm-newsroom)
+* **GitHub Repo of the Project**: [https://github.com/shtbt/llm-sporttweet](https://github.com/shtbt/llm-sporttweet)
 * **LinkedIn**: [https://www.linkedin.com/in/s-hassan-tabatabaei-19b5298a](https://www.linkedin.com/in/s-hassan-tabatabaei-19b5298a/)

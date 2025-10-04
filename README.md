@@ -127,7 +127,7 @@ llm-sporttweet/
 ## 📖Full Article
 
 This project was originally explained in detail on Medium:
-👉 ***LLM-SportTweet: How I Built an Autonomous LLM Pipeline That Reads Sports News and Writes Its Own Tweets***
+👉 (**LLM-SportTweet: How I Built an Autonomous LLM Pipeline That Reads Sports News and Writes Its Own Tweets**)[https://medium.com/@hassan.tbt1989/llm-sporttweet-how-i-built-an-autonomous-llm-pipeline-that-reads-sports-news-and-writes-its-own-4d90a5a87c59]
 
 Below is the full article for accessibility:
 

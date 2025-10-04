@@ -1,4 +1,4 @@
-# 📌 LLM-SportTweetAgent
+# 📌 LLM-SportTweet
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-green.svg)](https://www.python.org/)
 ![LangChain](https://img.shields.io/badge/Powered%20by-LangChain-green) 
@@ -8,7 +8,7 @@
 ![Last Commit](https://img.shields.io/github/last-commit/shtbt/llm-newsroom)
 
 
-### An Autonomous LLM-powered newsroom that reads sports news feeds, scores articles, and writes its own tweets 🤖
+### An LLM-powered system that reads sports news feeds, scores articles, and writes its own tweets. 🤖
 *Automates content curation, scoring, and social media posting using LLMs.*
 
 ![LLM-Newsroom](/img/header.png)

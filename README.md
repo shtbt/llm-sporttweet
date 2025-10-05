@@ -9,7 +9,7 @@
 
 
 ### An LLM-powered system that reads sports news feeds, scores articles, and writes its own tweets. 🤖
-*Automates content curation, scoring, and social media posting using LLMs.*
+*Automates content curation, scoring, and social media posting using LLMs. [Medium Post Here](https://medium.com/@hassan.tbt1989/llm-sporttweet-how-i-built-an-autonomous-llm-pipeline-that-reads-sports-news-and-writes-its-own-4d90a5a87c59)*
 
 ![LLM-SportTweet](/img/header.png)
 ---
